@@ -1,0 +1,762 @@
+openapi: 3.0.0
+info:
+  title: howmuch API
+  description: How Much API for Software Engineering Course
+  contact:
+    email: info@howmuch.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0-oas3
+servers:
+- url: https://virtserver.swaggerhub.com/TMANOLIS/How-Much-API/1.0.0
+  description: SwaggerHub API Auto Mocking
+paths:
+  /user:
+    post:
+      summary: Create a new user account
+      description: |
+        FR1 - User must be able to register as Citizen or Company
+      operationId: createUser
+      requestBody:
+        description: User model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_body'
+        required: true
+      responses:
+        "201":
+          description: Succesful creation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user_body'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad Request
+      x-swagger-router-controller: Default
+  /user/login:
+    put:
+      summary: Logs user into the system
+      description: |
+        FR2 - User must be able to login with email and password
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_login_body_1'
+      responses:
+        "200":
+          description: Succesful login
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 200
+                message: Succesful login
+        "403":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 403
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+  /user/retrieve:
+    put:
+      summary: Retrieves user's password
+      description: |
+        FR3 - User must be able to retrieve his/her/its password
+      operationId: retrievePassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/user_retrieve_body_1'
+      responses:
+        "202":
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 202
+                message: OK
+      x-swagger-router-controller: Default
+  /company:
+    get:
+      summary: Search companies by name
+      description: |
+        FR5 - User must be able to search for companies by name
+      operationId: searchCompanies
+      parameters:
+      - name: username
+        in: query
+        description: The name of the company
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200'
+                x-content-type: application/json
+      x-swagger-router-controller: Default
+  /company/{username}:
+    get:
+      summary: Get company's profile
+      description: |
+        FR6 - User must be able to view company's details
+      operationId: getCompany
+      parameters:
+      - name: username
+        in: path
+        description: The username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Succesful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+      x-swagger-router-controller: Default
+    put:
+      summary: Edit company's profile
+      description: |
+        FR11 - Company must be able to enter and edit its data
+      operationId: editCompany
+      parameters:
+      - name: username
+        in: path
+        description: The username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Company model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/company_username_body'
+        required: true
+      responses:
+        "200":
+          description: Succesful edit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/company_username_body'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+  /citizen:
+    get:
+      summary: Get citizens userID based on demographic paramters
+      description: |
+        FR13 - System must be able to calculate statistics
+      operationId: getCitizens
+      parameters:
+      - name: age
+        in: query
+        description: Age of citizen users
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: area
+        in: query
+        description: Area of residence of citizen users
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Succesful get
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_1'
+                x-content-type: application/json
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+  /citizen/{username}:
+    get:
+      summary: Get citizen's profile
+      description: |
+        FR7 - Citizen must be able to manage his personal data
+      operationId: getCitizen
+      parameters:
+      - name: username
+        in: path
+        description: The username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Succesful retrieval
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+    put:
+      summary: Edit citizen's profile
+      description: |
+        FR7 - Citizen must be able to manage his personal data
+      operationId: editCitizen
+      parameters:
+      - name: username
+        in: path
+        description: The username
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Citizen model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/citizen_username_body'
+        required: true
+      responses:
+        "200":
+          description: Succesful edit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/citizen_username_body'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+  /expense:
+    get:
+      summary: "Get expense based either on userID, company, date or all of the above"
+      description: |
+        FR9   - Citizen must be able to see his/her/its expenses history
+        FR10  - View Citizen Statistics
+        FR13  - System must be able to calculate statistics
+      operationId: getExpense
+      parameters:
+      - name: userID
+        in: query
+        description: ID of the user who added the expense
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: date
+        in: query
+        description: Date of expense
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: company
+        in: query
+        description: Company's name of expense
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Succesful retrieval
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/inline_response_200_2'
+                x-content-type: application/json
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+    post:
+      summary: Add an expense
+      description: |
+        FR8 - Citizen must be able to add an expense
+      operationId: addExpense
+      requestBody:
+        description: Expense model
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/expense_body'
+        required: true
+      responses:
+        "201":
+          description: Succesful creation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/expense_body'
+        "400":
+          description: Bad input parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 400
+                message: Bad request
+        "401":
+          description: Unauthorized user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+              example:
+                code: 401
+                message: Unauthorized user
+      x-swagger-router-controller: Default
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userID:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        userType:
+          type: integer
+      xml:
+        name: User
+    Company:
+      type: object
+      properties:
+        username:
+          type: string
+        logo:
+          type: object
+        location:
+          type: string
+        menu:
+          type: object
+        price:
+          type: number
+      xml:
+        name: Company
+    Citizen:
+      type: object
+      properties:
+        username:
+          type: string
+        age:
+          type: integer
+        areaOfResidence:
+          type: string
+      xml:
+        name: Citizen
+    Expense:
+      type: object
+      properties:
+        userID:
+          type: integer
+        price:
+          type: number
+        company:
+          type: string
+        product:
+          type: string
+        date:
+          type: string
+      xml:
+        name: Expense
+    AllCompanies:
+      type: array
+      items:
+        $ref: '#/components/schemas/company_username_body'
+    AllCitizens:
+      type: array
+      items:
+        $ref: '#/components/schemas/citizen_username_body'
+    AllExpenses:
+      type: array
+      items:
+        $ref: '#/components/schemas/expense_body'
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+    user_login_body:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    user_retrieve_body:
+      type: object
+      properties:
+        email:
+          type: string
+    user_body:
+      type: object
+      properties:
+        userID:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        userType:
+          type: integer
+      example:
+        password: password
+        userType: 6
+        userID: 0
+        email: email
+        username: username
+      xml:
+        name: User
+    inline_response_400:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      example:
+        code: 0
+        message: message
+    user_login_body_1:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    user_retrieve_body_1:
+      type: object
+      properties:
+        email:
+          type: string
+    inline_response_200:
+      type: object
+      properties:
+        username:
+          type: string
+        logo:
+          type: object
+        location:
+          type: string
+        menu:
+          type: object
+        price:
+          type: number
+      example:
+        price: 0.80082819046101150206595775671303272247314453125
+        logo: {}
+        location: location
+        menu: {}
+        username: username
+      xml:
+        name: Company
+    company_username_body:
+      type: object
+      properties:
+        username:
+          type: string
+        logo:
+          type: object
+        location:
+          type: string
+        menu:
+          type: object
+        price:
+          type: number
+      example:
+        price: 0.80082819046101150206595775671303272247314453125
+        logo: {}
+        location: location
+        menu: {}
+        username: username
+      xml:
+        name: Company
+    inline_response_200_1:
+      type: object
+      properties:
+        username:
+          type: string
+        age:
+          type: integer
+        areaOfResidence:
+          type: string
+      example:
+        areaOfResidence: areaOfResidence
+        age: 0
+        username: username
+      xml:
+        name: Citizen
+    citizen_username_body:
+      type: object
+      properties:
+        username:
+          type: string
+        age:
+          type: integer
+        areaOfResidence:
+          type: string
+      example:
+        areaOfResidence: areaOfResidence
+        age: 0
+        username: username
+      xml:
+        name: Citizen
+    inline_response_200_2:
+      type: object
+      properties:
+        userID:
+          type: integer
+        price:
+          type: number
+        company:
+          type: string
+        product:
+          type: string
+        date:
+          type: string
+      example:
+        date: date
+        product: product
+        price: 6.02745618307040320615897144307382404804229736328125
+        company: company
+        userID: 0
+      xml:
+        name: Expense
+    expense_body:
+      type: object
+      properties:
+        userID:
+          type: integer
+        price:
+          type: number
+        company:
+          type: string
+        product:
+          type: string
+        date:
+          type: string
+      example:
+        date: date
+        product: product
+        price: 6.02745618307040320615897144307382404804229736328125
+        company: company
+        userID: 0
+      xml:
+        name: Expense
+  requestBodies:
+    User:
+      description: User model
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userID:
+                type: integer
+              username:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+              userType:
+                type: integer
+            xml:
+              name: User
+      required: true
+    Citizen:
+      description: Citizen model
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              age:
+                type: integer
+              areaOfResidence:
+                type: string
+            xml:
+              name: Citizen
+      required: true
+    Company:
+      description: Company model
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              logo:
+                type: object
+              location:
+                type: string
+              menu:
+                type: object
+              price:
+                type: number
+            xml:
+              name: Company
+      required: true
+    Expense:
+      description: Expense model
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              userID:
+                type: integer
+              price:
+                type: number
+              company:
+                type: string
+              product:
+                type: string
+              date:
+                type: string
+            xml:
+              name: Expense
+      required: true
