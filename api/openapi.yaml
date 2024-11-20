@@ -9,7 +9,7 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.0-oas3
 servers:
-- url: https://virtserver.swaggerhub.com/TMANOLIS/How-Much-API/1.0.0
+- url: http://localhost:8080
   description: SwaggerHub API Auto Mocking
 paths:
   /user:
