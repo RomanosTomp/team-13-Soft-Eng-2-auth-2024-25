@@ -197,17 +197,17 @@ exports.getExpense = function(userID,date,company) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ {
-  "date" : "date",
-  "product" : "product",
+  "date" : "20/03/2001",
+  "product" : "Grinder",
   "price" : 6.027456183070403,
-  "company" : "company",
+  "company" : "Kushal's Coffee Shop",
   "userID" : 0
 }, {
-  "date" : "date",
-  "product" : "product",
-  "price" : 6.027456183070403,
-  "company" : "company",
-  "userID" : 0
+  "date" : "21/03/2001",
+  "product" : "Tea bags",
+  "price" : 7.027456183070403,
+  "company" : "Kushal's Coffee Shop",
+  "userID" : 1
 } ];
     if (Object.keys(examples).length > 0) {
       resolve(examples[Object.keys(examples)[0]]);
@@ -216,7 +216,20 @@ exports.getExpense = function(userID,date,company) {
     }
   });
 }
-
+ 
+exports.getStatistics = function() {
+  return new Promise(function(resolve) {
+    var examples = {};
+    examples['application/json'] = {
+      "statisticsfile": "U3RfdzffwG2DFFOJScxc="
+      };
+      if (Object.keys(examples).length > 0) {
+        resolve(examples[Object.keys(examples)[0]]);
+      } else {
+        resolve();
+      }
+    });
+}
 
 /**
  * Logs user into the system
