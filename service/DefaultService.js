@@ -18,10 +18,10 @@ exports.addExpense = function(body) {
   "company" : "company",
   "userID" : 0
 };
-    if (Object.keys(examples).length > 0) {
+    if (Object.keys(examples).length > 0  && body.product && body.price) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+      resolve(new Error('Invalid expense data'));
     }
   });
 }
