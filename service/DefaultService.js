@@ -10,21 +10,27 @@
  **/
 exports.addExpense = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "date" : "date",
-  "product" : "product",
-  "price" : 6.027456183070403,
-  "company" : "company",
-  "userID" : 0
-};
-    if (Object.keys(examples).length > 0  && body.product && body.price) {
-      resolve(examples[Object.keys(examples)[0]]);
+    console.log('addExpense called with:', body);//debugging
+    // Check if all required fields are present
+    if (body.product && body.price && body.company && body.userID && body.date) {
+      // If data is valid, return a valid example (resolve)
+      const example = {
+        "date": body.date,
+        "product": body.product,
+        "price": body.price,
+        "company": body.company,
+        "userID": body.userID
+      };
+      resolve(example);  // Resolve with valid data
     } else {
-      resolve(new Error('Invalid expense data'));
+      console.log('Invalid expense data',body);//debugging
+      // If any required field is missing, reject the promise
+      const error = new Error('Invalid expense data');
+      reject(error);  // Reject with an error
     }
   });
-}
+};
+
 
 
 /**
