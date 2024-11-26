@@ -195,24 +195,24 @@ exports.getCompany = function(username) {
  **/
 exports.getExpense = function(userID,date,company) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "date" : "20/03/2001",
-  "product" : "Grinder",
-  "price" : 6.027456183070403,
-  "company" : "Kushal's Coffee Shop",
-  "userID" : 0
-}, {
-  "date" : "21/03/2001",
-  "product" : "Tea bags",
-  "price" : 7.027456183070403,
-  "company" : "Kushal's Coffee Shop",
-  "userID" : 1
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    if (userID || date || company) {
+      var examples = {};
+      examples['application/json'] = [ {
+        "date" : "20/03/2001",
+        "product" : "Grinder",
+        "price" : 6.027456183070403,
+        "company" : "Kushal's Coffee Shop",
+        "userID" : 0
+      }, {
+        "date" : "21/03/2001",
+        "product" : "Tea bags",
+        "price" : 7.027456183070403,
+        "company" : "Kushal's Coffee Shop",
+        "userID" : 1
+      } ];
+      resolve(examples['application/json']);
+    }else {
+      reject(new Error('Invalid expense query parameters'));
     }
   });
 }
