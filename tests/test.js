@@ -65,7 +65,7 @@ test('getExpense should return a list with expenses', async t => {
 		const result = await DefaultService.getExpense(userID, date, company);
 		t.true(Array.isArray(result));
 	} catch(error){
-		t.fail('editCitizen gave error: ' + error.message)
+		t.fail('getExpense gave error: ' + error.message)
 	}
 })
 
@@ -96,7 +96,7 @@ test('getCompany should return a valid company profile', async t => {
 		t.true("price" in result && "logo" in result && 
 			"location" in result && "menu" in result && "username" in result)
 	} catch(error) {
-		t.fail('editCompany gave error: ' + error.message)
+		t.fail('getCompany gave error: ' + error.message)
 	}
 })
 
@@ -109,7 +109,11 @@ test('getCompany should throw an error for invalid company name', async t => {
 });
 
 test('editCitizen should return a valid user profile', async t => {
-	const body = {};
+	const body = {
+		areaOfResidence: "areaOfResidence",
+		age: 0,
+		username: "TestUser"
+	};
 	const username = "TestUser";
 
 	try {
@@ -121,7 +125,11 @@ test('editCitizen should return a valid user profile', async t => {
 })
 
 test('editCitizen should throw an error for invalid username', async t => {
-	const body = {};
+	const body = {
+		areaOfResidence: "areaOfResidence",
+		age: 0,
+		username: "username"
+	};
 	const username = "";
 
 	// Use `t.throwsAsync` to check that the promise is rejected
@@ -129,8 +137,23 @@ test('editCitizen should throw an error for invalid username', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
 
-test('editCompany should return a valid company profile', async t => {
+test('editCitizen should throw an error for invalid body', async t => {
 	const body = {};
+	const username = "TestUser";
+
+	// Use `t.throwsAsync` to check that the promise is rejected
+	const error = await t.throwsAsync(() => DefaultService.editCitizen(body, username));
+	t.is(error.message, 'Invalid body');  // Ensure the error message matches
+});
+
+test('editCompany should return a valid company profile', async t => {
+	const body = {
+		price: 0.1,
+		logo: {},
+		location: "location",
+		menu: {},
+		username: "TestCompany"
+	};
 	const username = "TestCompany";
 
 	try {
@@ -143,7 +166,13 @@ test('editCompany should return a valid company profile', async t => {
 })
 
 test('editCompany should throw an error for invalid company name', async t => {
-	const body = {};
+	const body = {
+		price: 0.1,
+		logo: {},
+		location: "location",
+		menu: {},
+		username: "TestCompany"
+	};
 	const username = "";
 
 	// Use `t.throwsAsync` to check that the promise is rejected
@@ -151,6 +180,14 @@ test('editCompany should throw an error for invalid company name', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
  
+test('editCompany should throw an error for invalid body', async t => {
+	const body = {};
+	const username = "TestCompany";
+
+	// Use `t.throwsAsync` to check that the promise is rejected
+	const error = await t.throwsAsync(() => DefaultService.editCompany(body, username));
+	t.is(error.message, 'Invalid body');  // Ensure the error message matches
+});
 
 test('createUser should resolve with the correct response when called with valid data', async t => {
 	const validBody = {
