@@ -67,10 +67,19 @@ exports.editCitizen = function(body,username) {
   "age" : 0,
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValidUsername) {
+      const isValidBody = "areaOfResidence" in body && "age" in body && "username" in body;
+      if(isValidBody) {
+        resolve(examples[Object.keys(examples)[0]]);
+      } else {
+        const error = new Error('Invalid body');
+        reject(error);
+      }
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -94,10 +103,20 @@ exports.editCompany = function(body,username) {
   "menu" : { },
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValidUsername) {
+      const isValidBody = "price" in body && "logo" in body && "location" in body &&
+        "menu" in body && "username" in body;
+      if(isValidBody) {
+        resolve(examples[Object.keys(examples)[0]]);
+      } else {
+        const error = new Error('Invalid body');
+        reject(error);
+      }
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -118,10 +137,13 @@ exports.getCitizen = function(username) {
   "age" : 0,
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
+    const isValid = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -173,10 +195,13 @@ exports.getCompany = function(username) {
   "menu" : { },
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
+    const isValid = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
