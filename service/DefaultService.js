@@ -35,21 +35,20 @@ exports.addExpense = function(body) {
  **/
 exports.createUser = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "password" : "password",
-  "userType" : 6,
-  "userID" : 0,
-  "email" : "email",
-  "username" : "username"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
+    
+    const requiredKeys = ['username', 'password', 'userType', 'userID', 'email'];
+    const isValid = requiredKeys.every(key => body.hasOwnProperty(key) && body[key] !== '');
+
+    if (!isValid) {
+      const error = new Error('Invalid user data');
+      reject(error); 
+    } 
+    else {
+      resolve(body);
     }
   });
-}
+};
+
 
 
 /**
@@ -239,16 +238,15 @@ exports.getStatistics = function() {
  **/
 exports.loginUser = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "code" : 0,
-  "message" : "message"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+	  const required = ['email', 'password'];
+	  const isValid = required.every(key => body.hasOwnProperty(key) && body[key] !== '');
+
+	  if(!isValid) {
+		  const error = new Error('Missing email or password');
+	  	  reject(error);
+	  } else {
+		  resolve({ message: 'Login successful' });
+	  }
   });
 }
 
@@ -262,16 +260,22 @@ exports.loginUser = function(body) {
  **/
 exports.retrievePassword = function(body) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "code" : 0,
-  "message" : "message"
-};
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
-    } else {
-      resolve();
-    }
+  	const required = ['email'];
+	const isValid = required.every(key => body.hasOwnProperty(key) && body[key] !== '');
+
+	if(!isValid) {
+		const error = new Error('Missing email');
+		reject(error);
+	} else {
+		const { email } = body;
+
+		const data = {
+		  email: email,
+		  password: "password123"
+		};
+		
+		resolve(data);
+	}
   });
 }
 

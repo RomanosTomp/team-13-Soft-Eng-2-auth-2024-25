@@ -18,10 +18,12 @@ module.exports.addExpense = function addExpense (req, res, next, body) {
 module.exports.createUser = function createUser (req, res, next, body) {
   Default.createUser(body)
     .then(function (response) {
+      console.log('Account created successfully');
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+      console.error('Error in createUser: ${error.message}');
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
@@ -90,8 +92,9 @@ module.exports.loginUser = function loginUser (req, res, next, body) {
     .then(function (response) {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+	    console.error('Error in loginUser: ${error.message}');
+	    utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
@@ -100,8 +103,9 @@ module.exports.retrievePassword = function retrievePassword (req, res, next, bod
     .then(function (response) {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+      console.error('Error in retrievePassword: ${error.message}');
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
