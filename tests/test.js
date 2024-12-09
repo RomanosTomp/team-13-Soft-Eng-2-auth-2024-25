@@ -25,44 +25,39 @@ test('foo', t => {
 	t.pass();
 });
 
-test('addExpense should call DefaultService.addExpense and return expense', async t => {
-	const body = {
+test('addExpense should resolve with the correct response', async t => {
+	const validBody = {
 		date: "2024-10-01",
 		product: "Coffee",
 		price: 4.50,
 		company: "Coffee Shop",
 		userID: 1
 	};
-	const req = {};
-	const res = {}; //Mocj response object
-	const next = sinon.spy(); //Mock next as spy
-
-	//Mock DefaultService.addExpense to return body
-	sinon.stub(DefaultService, 'addExpense').resolves(body);
-
-	const writeJsonMock = sinon.stub(utils, 'writeJson').callsFake((resObj, response) => {
-		resObj.payload = response;
-	});	
-	
-	await DefaultController.addExpense(req, res, next, body);
-
-	t.deepEqual( res.payload, body );
-
-	DefaultService.addExpense.restore();
-	utils.writeJson.restore();
+	const response = await DefaultService.addExpense(validBody);
+	t.deepEqual(response, validBody);
 });
 
 test('addExpense should throw an error for invalid data', async t => {
-	const body = {
-		date: "2024-10-01",
-		product: "Coffee",
-		company: "Coffee Shop",
+	const missingDataTypes = {
+		  date: "11-12-2024",
+		  product: "tennis ball",
 	};
-
-	// Use `t.throwsAsync` to check that the promise is rejected
-	const error = await t.throwsAsync(() => DefaultService.addExpense(body));
-	t.is(error.message, 'Invalid expense data');  // Ensure the error message matches
+  
+	const emptyValues = {
+		  date: "",
+		  product: "",
+		  price: "",  // Empty values for fields
+		  company: "",
+		  userID: ""
+	};
+  
+	const error1 = await t.throwsAsync(() => DefaultService.addExpense(missingDataTypes));
+	t.is(error1.message, 'Invalid expense data');
+  
+	const error2 = await t.throwsAsync(() => DefaultService.addExpense(emptyValues));
+	t.is(error2.message, 'Invalid expense data');
 });
+
 
 test('getExpense should return a list with expenses', async t => {
 	const userID = 3;

@@ -10,26 +10,19 @@
  **/
 exports.addExpense = function(body) {
   return new Promise(function(resolve, reject) {
-    console.log('addExpense called with:', body);//debugging
-    // Check if all required fields are present
-    if (body.product && body.price && body.company && body.userID && body.date) {
-      // If data is valid, return a valid example (resolve)
-      const example = {
-        "date": body.date,
-        "product": body.product,
-        "price": body.price,
-        "company": body.company,
-        "userID": body.userID
-      };
-      resolve(example);  // Resolve with valid data
-    } else {
-      console.log('Invalid expense data',body);//debugging
-      // If any required field is missing, reject the promise
+
+    const requiredKeys = ['date', 'product', 'price', 'company', 'userID'];
+    const isValid = requiredKeys.every(key => body.hasOwnProperty(key) && body[key] !== '');
+    
+    if (!isValid) {
       const error = new Error('Invalid expense data');
-      reject(error);  // Reject with an error
+      reject(error);
+    }
+    else{
+      resolve(body);
     }
   });
-};
+}
 
 
 
