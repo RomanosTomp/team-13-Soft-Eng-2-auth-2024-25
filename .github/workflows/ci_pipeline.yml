@@ -25,6 +25,15 @@ jobs:
         with: 
           node-version: 'node'
 
+      #Caching node_modules to speed up builds    
+      - name: Cache Node modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
       #Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
