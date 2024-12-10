@@ -169,10 +169,12 @@ exports.getCitizens = function(age,area) {
   "age" : 0,
   "username" : "username"
 } ];
-    if (Object.keys(examples).length > 0) {
+    const isValid = age != null || (typeof area == 'string' && area.length > 0);
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid inputs');
+      reject(error);
     }
   });
 }

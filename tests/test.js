@@ -88,6 +88,31 @@ test('getCitizen should throw an error for invalid username', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
 
+test('getCitizens should return a valid user profile', async t => {
+	const age = 0;
+	const area = "areaOfResidence";
+
+	try {
+		const result = await DefaultService.getCitizens(age, area);
+		let success = true;
+		for (let res of result) {
+			success = success && ("areaOfResidence" in res && "age" in res && "username" in res);
+		}
+		t.true(success)
+	} catch(error) {
+		t.fail('getCitizens gave error: ' + error.message)
+	}
+})
+
+test('getCitizens should throw an error for invalid username', async t => {
+	const age = null;
+	const area = "";
+
+	// Use `t.throwsAsync` to check that the promise is rejected
+	const error = await t.throwsAsync(() => DefaultService.getCitizens(age, area));
+	t.is(error.message, 'Invalid inputs');  // Ensure the error message matches
+});
+
 test('getCompany should return a valid company profile', async t => {
 	const username = "TestCompany";
 
