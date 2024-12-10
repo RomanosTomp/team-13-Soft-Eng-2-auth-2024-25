@@ -114,7 +114,8 @@ module.exports.searchCompanies = function searchCompanies (req, res, next, usern
     .then(function (response) {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+      console.error(`Error in searchCompanies: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
