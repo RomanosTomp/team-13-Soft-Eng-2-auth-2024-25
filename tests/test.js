@@ -286,7 +286,7 @@ test('retrievePassword should reject with error message when called without vali
 ///JIM///
 
 test('searchCompanies should return a list of companies for a valid username', async t => {
-	const username = "TestCompany";
+	const username = "validCompany";
 
 	try {
 		const result = await DefaultService.searchCompanies(username);
