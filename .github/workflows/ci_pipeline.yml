@@ -8,24 +8,23 @@ on:
     branches:
       - main
 
-
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
 
     steps:
-      #Step 1: Check repo code
+      # Step 1: Checkout code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      #Step 2: Set up Node.js
+      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
-        with: 
+        with:
           node-version: 'node'
 
-      #Caching node_modules to speed up builds    
+      # Caching node_modules to speed up builds    
       - name: Cache Node modules
         uses: actions/cache@v3
         with:
@@ -33,27 +32,29 @@ jobs:
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-            
-      #Step 3: Install dependencies
+
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      #Step 4: Run Ava
+      # Step 4: Run Ava tests
       - name: Run Ava tests
         run: npx ava
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Make sure deploy runs only if the build job succeeds
-    if: success()  # Only deploy if tests pass
+    needs: test  # Make sure deploy runs only if the test job succeeds
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      # Step 1: Checkout code (again, since deploy job is separate)
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Render deploy
-      env:
-        RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-      run: |
-        curl -X POST https://api.render.com/v1/services/{SERVICE_ID}/deploys \
-        -H "Authorization: Bearer $RENDER_API_KEY"
+      # Step 2: Render deploy
+      - name: Render deploy
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+        run: |
+          curl -X POST https://api.render.com/v1/services/{SERVICE_ID}/deploys \
+          -H "Authorization: Bearer $RENDER_API_KEY"
+
