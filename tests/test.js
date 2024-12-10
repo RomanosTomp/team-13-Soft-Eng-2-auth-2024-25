@@ -282,3 +282,41 @@ test('retrievePassword should reject with error message when called without vali
 	t.is(error2.message, 'Missing email');
 });
 
+
+///JIM///
+
+test('searchCompanies should return a list of companies for a valid username', async t => {
+	const username = "TestCompany";
+
+	try {
+		const result = await DefaultService.searchCompanies(username);
+		t.true(Array.isArray(result), "Result should be an array");
+		t.true(result.length > 0, "Result should not be empty");
+		t.true(result.every(company => "price" in company && "logo" in company && 
+			"location" in company && "menu" in company && "username" in company), 
+			"Each company should have the required properties"
+		);
+	} catch(error) {
+		t.fail('searchCompanies gave an error: ' + error.message);
+	}
+});
+
+
+test('searchCompanies should return an empty array for a non-existing username', async t => {
+	const username = "NonExistingCompany";
+
+	const result = await DefaultService.searchCompanies(username);
+	t.true(Array.isArray(result), "Result should be an array");
+	t.is(result.length, 0, "Result should be an empty array for non-existing username");
+});
+
+
+test('searchCompanies should throw an error for an invalid username', async t => {
+	const invalidUsernames = [null, "", undefined];
+
+	for (const username of invalidUsernames) {
+		const error = await t.throwsAsync(() => DefaultService.searchCompanies(username));
+		t.is(error.message, 'Invalid username', `Expected "Invalid username" for input "${username}"`);
+	}
+});
+
