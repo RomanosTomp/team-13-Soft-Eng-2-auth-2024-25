@@ -48,13 +48,11 @@ jobs:
     steps:
       # Step 1: Checkout code (again, since deploy job is separate)
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with: 
+          service-id: ${{ secrets.RENDER_SERVICE_ID }}
+          api-key: ${{ secrets.RENDER_API_KEY }}
+          wait-for-success: true
 
-      # Step 2: Render deploy
-      - name: Render deploy
-        env:
-          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
-        run: |
-          curl -X POST https://api.render.com/v1/services/csv0oaq3esus73cotd60/deploys \
-          -H "Authorization: Bearer $RENDER_API_KEY"
+      
 
