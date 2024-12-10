@@ -314,25 +314,40 @@ exports.retrievePassword = function(body) {
  **/
 exports.searchCompanies = function(username) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-}, {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    const isValid = (typeof username === 'string' && username.trim().length > 0);
+
+    if (!isValid) {
+      const error = new Error('Invalid company name');
+      reject(error);
+      return;
+    }
+    const examples = [
+      {
+        price: 0.8,
+        logo: { url: "https://example.com/logo1.png" },
+        location: "Downtown",
+        menu: { items: ["Coffee", "Tea"] },
+        username: "CoffeeShop123"
+      },
+      {
+        price: 1.2,
+        logo: { url: "https://example.com/logo2.png" },
+        location: "Uptown",
+        menu: { items: ["Espresso", "Latte"] },
+        username: "BestCafe456"
+      }
+    ];
+    const filteredCompanies = examples.filter(company => 
+      company.username.toLowerCase().includes(username.toLowerCase())
+    );
+
+    if (filteredCompanies.length > 0) {
+      resolve(filteredCompanies);
     } else {
-      resolve();
+      const error = new Error('No companies found');
+      reject(error);
     }
   });
 }
+
 
