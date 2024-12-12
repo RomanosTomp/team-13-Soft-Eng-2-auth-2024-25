@@ -10,26 +10,19 @@
  **/
 exports.addExpense = function(body) {
   return new Promise(function(resolve, reject) {
-    console.log('addExpense called with:', body);//debugging
-    // Check if all required fields are present
-    if (body.product && body.price && body.company && body.userID && body.date) {
-      // If data is valid, return a valid example (resolve)
-      const example = {
-        "date": body.date,
-        "product": body.product,
-        "price": body.price,
-        "company": body.company,
-        "userID": body.userID
-      };
-      resolve(example);  // Resolve with valid data
-    } else {
-      console.log('Invalid expense data',body);//debugging
-      // If any required field is missing, reject the promise
+
+    const requiredKeys = ['date', 'product', 'price', 'company', 'userID'];
+    const isValid = requiredKeys.every(key => body.hasOwnProperty(key) && body[key] !== '');
+    
+    if (!isValid) {
       const error = new Error('Invalid expense data');
-      reject(error);  // Reject with an error
+      reject(error);
+    }
+    else{
+      resolve(body);
     }
   });
-};
+}
 
 
 
@@ -74,10 +67,19 @@ exports.editCitizen = function(body,username) {
   "age" : 0,
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValidUsername) {
+      const isValidBody = "areaOfResidence" in body && "age" in body && "username" in body;
+      if(isValidBody) {
+        resolve(examples[Object.keys(examples)[0]]);
+      } else {
+        const error = new Error('Invalid body');
+        reject(error);
+      }
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -101,10 +103,20 @@ exports.editCompany = function(body,username) {
   "menu" : { },
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValidUsername) {
+      const isValidBody = "price" in body && "logo" in body && "location" in body &&
+        "menu" in body && "username" in body;
+      if(isValidBody) {
+        resolve(examples[Object.keys(examples)[0]]);
+      } else {
+        const error = new Error('Invalid body');
+        reject(error);
+      }
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -125,10 +137,13 @@ exports.getCitizen = function(username) {
   "age" : 0,
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
+    const isValid = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -154,10 +169,12 @@ exports.getCitizens = function(age,area) {
   "age" : 0,
   "username" : "username"
 } ];
-    if (Object.keys(examples).length > 0) {
+    const isValid = age != null || (typeof area == 'string' && area.length > 0);
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid inputs');
+      reject(error);
     }
   });
 }
@@ -180,10 +197,13 @@ exports.getCompany = function(username) {
   "menu" : { },
   "username" : "username"
 };
-    if (Object.keys(examples).length > 0) {
+    const isValid = (typeof username == 'string' || username instanceof String) &&  
+      username.length > 0;
+    if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-      resolve();
+		  const error = new Error('Invalid username');
+      reject(error);
     }
   });
 }
@@ -296,25 +316,37 @@ exports.retrievePassword = function(body) {
  **/
 exports.searchCompanies = function(username) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = [ {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-}, {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-} ];
-    if (Object.keys(examples).length > 0) {
-      resolve(examples[Object.keys(examples)[0]]);
+    if (!username || typeof username !== 'string' || username.trim() === '') {
+      reject(new Error('Invalid username'));  
+      return;
+    }
+
+    const examples = {
+      'application/json': [
+        {
+          price: 0.8,
+          logo: { url: "logo.png" },
+          location: 'New York',
+          menu: { items: ["Coffee", "Bagel"] },
+          username: 'validCompany'
+        }
+      ]
+    };
+
+    const result = examples['application/json'].filter(
+      (company) => company.username === username
+    );
+
+    if (result.length > 0) {
+      resolve(result);  // Return matched companies
     } else {
-      resolve();
+      resolve([]);  // Return empty array if no match
     }
   });
-}
+};
+
+
+
+
+
 

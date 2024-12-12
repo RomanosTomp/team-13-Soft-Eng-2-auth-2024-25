@@ -6,10 +6,12 @@ var Default = require('../service/DefaultService');
 module.exports.addExpense = function addExpense (req, res, next, body) {
   Default.addExpense(body)
     .then(function (response) {
+      console.log('Expense added succesfully');
       utils.writeJson(res, response);
     })
     .catch(function (response) {
-      utils.writeJson(res, response, 400);
+      console.error('Error in addExpense: ${error.message}');
+      utils.writeJson(res, {message: error.message}, 400);
     });
 };
 
@@ -112,7 +114,8 @@ module.exports.searchCompanies = function searchCompanies (req, res, next, usern
     .then(function (response) {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(function (error) {
+      console.error(`Error in searchCompanies: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
