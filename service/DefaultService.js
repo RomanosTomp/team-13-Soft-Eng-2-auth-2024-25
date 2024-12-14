@@ -241,6 +241,8 @@ exports.getExpense = function(userID,date,company) {
     }
   });
 }
+
+
  
 exports.getStatistics = function() {
   return new Promise(function(resolve) {

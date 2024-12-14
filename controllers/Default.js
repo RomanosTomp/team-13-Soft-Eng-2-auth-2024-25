@@ -3,15 +3,15 @@
 var utils = require('../utils/writer.js');
 var Default = require('../service/DefaultService');
 
-module.exports.addExpense = function addExpense (req, res, next, body) {
+module.exports.addExpense = function addExpense(req, res, next, body) {
   Default.addExpense(body)
-    .then(function (response) {
-      console.log('Expense added succesfully');
+    .then(response => {
+      console.log('Expense added successfully');
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      console.error('Error in addExpense: ${error.message}');
-      utils.writeJson(res, {message: error.message}, 400);
+    .catch(error => {
+      console.error(`Error in addExpense: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
@@ -77,15 +77,17 @@ module.exports.getCompany = function getCompany (req, res, next, username) {
     });
 };
 
-module.exports.getExpense = function getExpense (req, res, next, userID, date, company) {
+module.exports.getExpense = function getExpense(req, res, next, userID, date, company) {
   Default.getExpense(userID, date, company)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in getExpense: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
+
 
 module.exports.loginUser = function loginUser (req, res, next, body) {
   Default.loginUser(body)
