@@ -29,51 +29,58 @@ module.exports.createUser = function createUser (req, res, next, body) {
 
 module.exports.editCitizen = function editCitizen (req, res, next, body, username) {
   Default.editCitizen(body, username)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in editCitizen: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
 module.exports.editCompany = function editCompany (req, res, next, body, username) {
   Default.editCompany(body, username)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in editCompany: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
-module.exports.getCitizen = function getCitizen (req, res, next, username) {
+module.exports.getCitizen = function getCitizen(req, res, next, username) {
   Default.getCitizen(username)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in getCitizen: ${error.message}`);
+      const statusCode = error.statusCode || 400;
+      utils.writeJson(res, { message: error.message || 'Invalid request' }, statusCode);
     });
 };
 
 module.exports.getCitizens = function getCitizens (req, res, next, age, area) {
   Default.getCitizens(age, area)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in getCitizens: ${error.message}`);
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 
-module.exports.getCompany = function getCompany (req, res, next, username) {
+module.exports.getCompany = function getCompany(req, res, next, username) {
   Default.getCompany(username)
-    .then(function (response) {
+    .then(response => {
       utils.writeJson(res, response);
     })
-    .catch(function (response) {
-      utils.writeJson(res, response);
+    .catch(error => {
+      console.error(`Error in getCompany: ${error.message}`);
+      const statusCode = error.statusCode || 400;
+      utils.writeJson(res, { message: error.message || 'Invalid request' }, statusCode);
     });
 };
 
@@ -111,13 +118,20 @@ module.exports.retrievePassword = function retrievePassword (req, res, next, bod
     });
 };
 
-module.exports.searchCompanies = function searchCompanies (req, res, next, username) {
-  Default.searchCompanies(username)
-    .then(function (response) {
-      utils.writeJson(res, response);
+module.exports.searchCompanies = function searchCompanies(req, res, next) {
+  const username = req.query.username;
+  console.log('Received query:', username); // Already added
+  exports
+    .searchCompanies(username)
+    .then((response) => {
+      console.log('Service response:', response);
+      res.status(200).json(response); // Ensure the correct structure is being sent
     })
-    .catch(function (error) {
+    .catch((error) => {
       console.error(`Error in searchCompanies: ${error.message}`);
-      utils.writeJson(res, { message: error.message }, 400);
+      console.log('Error stack trace:', error.stack); // Log stack trace for debugging
+      res.status(error.statusCode || 500).json({ message: error.message });
     });
 };
+
+

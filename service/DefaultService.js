@@ -59,30 +59,41 @@ exports.createUser = function(body) {
  * username String The username
  * returns citizen_username_body
  **/
-exports.editCitizen = function(body,username) {
+exports.editCitizen = function(body, username) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = {
-  "areaOfResidence" : "areaOfResidence",
-  "age" : 0,
-  "username" : "username"
-};
-    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
-      username.length > 0;
+      "areaOfResidence": "areaOfResidence",
+      "age": 0,
+      "username": "username"
+    };
+
+    const isValidUsername = (typeof username === 'string' || username instanceof String) && username.length > 0;
+
     if (isValidUsername) {
-      const isValidBody = "areaOfResidence" in body && "age" in body && "username" in body;
-      if(isValidBody) {
+      const isValidBody = body && "areaOfResidence" in body && "age" in body && "username" in body;
+
+      if (isValidBody) {
+        // Return the modified example based on the body for realistic responses
+        examples['application/json'] = {
+          "areaOfResidence": body.areaOfResidence,
+          "age": body.age,
+          "username": body.username
+        };
         resolve(examples[Object.keys(examples)[0]]);
       } else {
         const error = new Error('Invalid body');
+        error.statusCode = 400; // Attach proper status code
         reject(error);
       }
     } else {
-		  const error = new Error('Invalid username');
+      const error = new Error('Invalid username');
+      error.statusCode = 400; // Attach proper status code
       reject(error);
     }
   });
-}
+};
+
 
 
 /**
@@ -93,33 +104,42 @@ exports.editCitizen = function(body,username) {
  * username String The username
  * returns company_username_body
  **/
-exports.editCompany = function(body,username) {
-  return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-};
-    const isValidUsername = (typeof username == 'string' || username instanceof String) &&  
-      username.length > 0;
+exports.editCompany = function (body, username) {
+  return new Promise(function (resolve, reject) {
+    const isValidUsername = typeof username === 'string' && username.length > 0;
+
     if (isValidUsername) {
-      const isValidBody = "price" in body && "logo" in body && "location" in body &&
-        "menu" in body && "username" in body;
-      if(isValidBody) {
-        resolve(examples[Object.keys(examples)[0]]);
+      const isValidBody =
+        body &&
+        "price" in body &&
+        "logo" in body &&
+        "location" in body &&
+        "menu" in body &&
+        "username" in body &&
+        body.username === username;
+
+      if (isValidBody) {
+        // Return the exact payload to reflect successful data update
+        resolve({
+          price: body.price,
+          logo: body.logo,
+          location: body.location,
+          menu: body.menu,
+          username: body.username
+        });
       } else {
         const error = new Error('Invalid body');
+        error.statusCode = 400; // Attach proper status code
         reject(error);
       }
     } else {
-		  const error = new Error('Invalid username');
+      const error = new Error('Invalid username');
+      error.statusCode = 400; // Attach proper status code
       reject(error);
     }
   });
-}
+};
+
 
 
 /**
@@ -129,24 +149,23 @@ exports.editCompany = function(body,username) {
  * username String The username
  * returns inline_response_200_1
  **/
-exports.getCitizen = function(username) {
+exports.getCitizen = function(username, query = {}) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "areaOfResidence" : "areaOfResidence",
-  "age" : 0,
-  "username" : "username"
-};
-    const isValid = (typeof username == 'string' || username instanceof String) &&  
-      username.length > 0;
+    const isValid = typeof username === 'string' && username.length > 0;
+
     if (isValid) {
-      resolve(examples[Object.keys(examples)[0]]);
+      resolve({
+        areaOfResidence: query.area || 'Unknown',
+        age: query.age || 0,
+        username
+      });
     } else {
-		  const error = new Error('Invalid username');
+      const error = new Error('Invalid username');
+      error.statusCode = 400;
       reject(error);
     }
   });
-}
+};
 
 
 /**
@@ -187,26 +206,25 @@ exports.getCitizens = function(age,area) {
  * username String The username
  * returns inline_response_200
  **/
-exports.getCompany = function(username) {
+exports.getCompany = function(username, query = {}) {
   return new Promise(function(resolve, reject) {
-    var examples = {};
-    examples['application/json'] = {
-  "price" : 0.8008281904610115,
-  "logo" : { },
-  "location" : "location",
-  "menu" : { },
-  "username" : "username"
-};
-    const isValid = (typeof username == 'string' || username instanceof String) &&  
-      username.length > 0;
+    const isValid = typeof username === 'string' && username.length > 0;
+
     if (isValid) {
-      resolve(examples[Object.keys(examples)[0]]);
+      resolve({
+        price: 0.8008281904610115,
+        logo: {},
+        location: 'location',
+        menu: {},
+        username: query.username || username
+      });
     } else {
-		  const error = new Error('Invalid username');
+      const error = new Error('Invalid username');
+      error.statusCode = 400;
       reject(error);
     }
   });
-}
+};
 
 
 /**
@@ -316,10 +334,13 @@ exports.retrievePassword = function(body) {
  * username String The name of the company
  * returns List
  **/
-exports.searchCompanies = function(username) {
-  return new Promise(function(resolve, reject) {
+exports.searchCompanies = function (username) {
+  return new Promise(function (resolve, reject) {
     if (!username || typeof username !== 'string' || username.trim() === '') {
-      reject(new Error('Invalid username'));  
+      const error = new Error('Invalid username'); // Updated error message
+      error.statusCode = 400;
+      console.error('Service rejected: Invalid username');
+      reject(error);
       return;
     }
 
@@ -327,25 +348,26 @@ exports.searchCompanies = function(username) {
       'application/json': [
         {
           price: 0.8,
-          logo: { url: "logo.png" },
+          logo: { url: 'logo.png' },
           location: 'New York',
-          menu: { items: ["Coffee", "Bagel"] },
-          username: 'validCompany'
-        }
-      ]
+          menu: { items: ['Coffee', 'Bagel'] },
+          username: 'validCompany',
+        },
+      ],
     };
 
     const result = examples['application/json'].filter(
       (company) => company.username === username
     );
 
-    if (result.length > 0) {
-      resolve(result);  // Return matched companies
-    } else {
-      resolve([]);  // Return empty array if no match
-    }
+    console.log('Service result:', result); // Log filtered result
+    resolve(result);
   });
 };
+
+
+
+
 
 
 

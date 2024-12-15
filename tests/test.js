@@ -336,12 +336,22 @@ test('searchCompanies should return an empty array for a non-existing username',
 });
 
 
-test('searchCompanies should throw an error for an invalid username', async t => {
-	const invalidUsernames = [null, "", undefined];
-
+test('searchCompanies should throw an error for an invalid username', async (t) => {
+	const invalidUsernames = [null, '', undefined];
+  
 	for (const username of invalidUsernames) {
-		const error = await t.throwsAsync(() => DefaultService.searchCompanies(username));
-		t.is(error.message, 'Invalid username', `Expected "Invalid username" for input "${username}"`);
+	  try {
+		await DefaultService.searchCompanies(username);
+		t.fail(`Expected an error for input "${username}" but none was thrown`);
+	  } catch (error) {
+		t.is(
+		  error.message,
+		  'Invalid username',
+		  `Expected "Invalid username" for input "${username}"`
+		);
+	  }
 	}
-});
+  });
+  
+
 
