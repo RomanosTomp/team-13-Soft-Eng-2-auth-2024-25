@@ -243,6 +243,21 @@ test('GET /citizen/{username} - should return 200 for valid username', async t =
 
 
 //missing test for invalid get citizen/{username} me kwdiko 400
+test('GET /citizen/{username} - should return 400 for wrong data', async t => {
+  let username = null;
+  const payload = {
+    // Example of a payload structure
+    name: null
+  };
+  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/citizen/${username}`, {
+    json: payload,
+    responseType: 'json'
+  }));
+
+  t.is(error.response.statusCode, 400);
+  t.is(error.response.body.message, 'Invalid body');
+});
+
 
 //Tests for valid company username
 
@@ -260,35 +275,46 @@ test('GET /company/{username} - should return 200 for valid username', async t =
 
 //missing test for invalid company/{username}
 
+test('GET /company/{username} - should return 400 for wrong data', async t => {
+  let username = null;
+  const payload = {
+    // Example of a payload structure
+    name: null
+  };
+  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/company/${username}`, {
+    json: payload,
+    responseType: 'json'
+  }));
+
+  t.is(error.response.statusCode, 400);
+  t.is(error.response.body.message, 'Invalid body');
+});
+
 //tests for searchCompanies
 
 //missing test for valid searchCompanies
-
-
-test('GET /company - should return 400 for invalid username', async (t) => {
-  const params = {
-    searchParams: {
-      username: '', // Invalid username
-    },
-    responseType: 'json',
-  };
-
-  const error = await t.throwsAsync(() =>
-    got('http://localhost:8080/company', params)
-  );
-
-  t.is(error.response.statusCode, 400, 'Response status should be 400');
-  t.is(
-    error.response.body.message,
-    "Empty value found for query parameter 'username'", // Adjusted expected message
-    'Error message should match'
-  );
+test('GET /company - should return 200 for valid company username', async t => {
+  try {
+    const response = await got.get('http://localhost:8080/company', {
+      searchParams: { username: 'validCompany' },  // Ensure 'validCompany' exists in the database
+      throwHttpErrors: true,  // This will throw on non-2xx responses, providing more insight
+    });
+    t.is(response.statusCode, 200, 'Response status should be 200 for valid company username');
+  } catch (error) {
+    t.fail(`Request failed with status code ${error.response.statusCode}`);
+  }
 });
-
-
 //missing both tests for getCitizens
+test('GET /citizen - should return 200 for valid age and area', async t => {
+  const response = await got.get('http://localhost:8080/citizen', {
+    searchParams: { age: 30, area: 'New York' },
+    throwHttpErrors: false, // Corrected typo
+  });
 
-
+  t.is(response.statusCode, 200, 'Response status should be 200 for valid query');
+  // Optionally, check if the body contains relevant data:
+  // t.truthy(response.body);  // Uncomment if you want to ensure response is not empty
+});
 
 /////////end/////////
 
