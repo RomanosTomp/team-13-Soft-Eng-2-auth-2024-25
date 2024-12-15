@@ -262,19 +262,19 @@ exports.getExpense = function(userID,date,company) {
 
 
  
-exports.getStatistics = function() {
-  return new Promise(function(resolve) {
-    var examples = {};
-    examples['application/json'] = {
-      "statisticsfile": "U3RfdzffwG2DFFOJScxc="
-      };
-      if (Object.keys(examples).length > 0) {
-        resolve(examples[Object.keys(examples)[0]]);
-      } else {
-        resolve();
-      }
-    });
-}
+// exports.getStatistics = function() {
+//   return new Promise(function(resolve) {
+//     var examples = {};
+//     examples['application/json'] = {
+//       "statisticsfile": "U3RfdzffwG2DFFOJScxc="
+//       };
+//       if (Object.keys(examples).length > 0) {
+//         resolve(examples[Object.keys(examples)[0]]);
+//       } else {
+//         resolve();
+//       }
+//     });
+// }
 
 /**
  * Logs user into the system
