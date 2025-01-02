@@ -12,7 +12,7 @@ exports.addExpense = function(body) {
   return new Promise(function(resolve, reject) {
 
     const requiredKeys = ['date', 'product', 'price', 'company', 'userID'];
-    const isValid = requiredKeys.every(key => body.hasOwnProperty(key) && body[key] !== '');
+    const isValid = requiredKeys.every(key => (key in body) && body[key] !== '');
     
     if (!isValid) {
       const error = new Error('Invalid expense data');
@@ -37,7 +37,7 @@ exports.createUser = function(body) {
   return new Promise(function(resolve, reject) {
     
     const requiredKeys = ['username', 'password', 'userType', 'userID', 'email'];
-    const isValid = requiredKeys.every(key => body.hasOwnProperty(key) && body[key] !== '');
+    const isValid = requiredKeys.every(key => (key in body) && body[key] !== '');
 
     if (!isValid) {
       const error = new Error('Invalid user data');
@@ -286,7 +286,7 @@ exports.getExpense = function(userID,date,company) {
 exports.loginUser = function(body) {
   return new Promise(function(resolve, reject) {
 	  const required = ['email', 'password'];
-	  const isValid = required.every(key => body.hasOwnProperty(key) && body[key] !== '');
+	  const isValid = required.every(key => (key in body) && body[key] !== '');
 
 	  if(!isValid) {
 		  const error = new Error('Missing email or password');
@@ -308,7 +308,7 @@ exports.loginUser = function(body) {
 exports.retrievePassword = function(body) {
   return new Promise(function(resolve, reject) {
   	const required = ['email'];
-	const isValid = required.every(key => body.hasOwnProperty(key) && body[key] !== '');
+	const isValid = required.every(key => (key in body) && body[key] !== '');
 
 	if(!isValid) {
 		const error = new Error('Missing email');
