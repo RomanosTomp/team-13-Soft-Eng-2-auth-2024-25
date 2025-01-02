@@ -102,8 +102,8 @@ module.exports.loginUser = function loginUser (req, res, next, body) {
       utils.writeJson(res, response);
     })
     .catch(function (error) {
-	    console.error('Error in loginUser: ${error.message}');
-	    utils.writeJson(res, { message: error.message }, 400);
+      console.error('Error in loginUser: ${error.message}');
+      utils.writeJson(res, { message: error.message }, 400);
     });
 };
 

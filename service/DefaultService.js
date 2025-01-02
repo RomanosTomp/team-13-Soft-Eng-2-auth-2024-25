@@ -13,7 +13,7 @@ exports.addExpense = function(body) {
 
     const requiredKeys = ['date', 'product', 'price', 'company', 'userID'];
     const isValid = requiredKeys.every(key => (key in body) && body[key] !== '');
-    
+
     if (!isValid) {
       const error = new Error('Invalid expense data');
       reject(error);
@@ -35,7 +35,7 @@ exports.addExpense = function(body) {
  **/
 exports.createUser = function(body) {
   return new Promise(function(resolve, reject) {
-    
+
     const requiredKeys = ['username', 'password', 'userType', 'userID', 'email'];
     const isValid = requiredKeys.every(key => (key in body) && body[key] !== '');
 
@@ -180,19 +180,19 @@ exports.getCitizens = function(age,area) {
   return new Promise(function(resolve, reject) {
     var examples = {};
     examples['application/json'] = [ {
-  "areaOfResidence" : "areaOfResidence",
-  "age" : 0,
-  "username" : "username"
-}, {
-  "areaOfResidence" : "areaOfResidence",
-  "age" : 0,
-  "username" : "username"
-} ];
+      "areaOfResidence" : "areaOfResidence",
+      "age" : 0,
+      "username" : "username"
+    }, {
+      "areaOfResidence" : "areaOfResidence",
+      "age" : 0,
+      "username" : "username"
+    } ];
     const isValid = age != null || (typeof area == 'string' && area.length > 0);
     if (isValid) {
       resolve(examples[Object.keys(examples)[0]]);
     } else {
-		  const error = new Error('Invalid inputs');
+      const error = new Error('Invalid inputs');
       reject(error);
     }
   });
@@ -261,7 +261,7 @@ exports.getExpense = function(userID,date,company) {
 }
 
 
- 
+
 // exports.getStatistics = function() {
 //   return new Promise(function(resolve) {
 //     var examples = {};
@@ -285,15 +285,15 @@ exports.getExpense = function(userID,date,company) {
  **/
 exports.loginUser = function(body) {
   return new Promise(function(resolve, reject) {
-	  const required = ['email', 'password'];
-	  const isValid = required.every(key => (key in body) && body[key] !== '');
+    const required = ['email', 'password'];
+    const isValid = required.every(key => (key in body) && body[key] !== '');
 
-	  if(!isValid) {
-		  const error = new Error('Missing email or password');
-	  	  reject(error);
-	  } else {
-		  resolve({ message: 'Login successful' });
-	  }
+    if(!isValid) {
+      const error = new Error('Missing email or password');
+      reject(error);
+    } else {
+      resolve({ message: 'Login successful' });
+    }
   });
 }
 
@@ -307,22 +307,22 @@ exports.loginUser = function(body) {
  **/
 exports.retrievePassword = function(body) {
   return new Promise(function(resolve, reject) {
-  	const required = ['email'];
-	const isValid = required.every(key => (key in body) && body[key] !== '');
+    const required = ['email'];
+    const isValid = required.every(key => (key in body) && body[key] !== '');
 
-	if(!isValid) {
-		const error = new Error('Missing email');
-		reject(error);
-	} else {
-		const { email } = body;
+    if(!isValid) {
+      const error = new Error('Missing email');
+      reject(error);
+    } else {
+      const { email } = body;
 
-		const data = {
-		  email: email,
-		  password: "password123"
-		};
-		
-		resolve(data);
-	}
+      const data = {
+        email: email,
+        password: "password123"
+      };
+
+      resolve(data);
+    }
   });
 }
 
