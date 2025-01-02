@@ -4,6 +4,9 @@ var utils = require('../utils/writer.js');
 var Default = require('../service/DefaultService');
 
 module.exports.addExpense = function addExpense(req, res, next, body) {
+  void req;
+  void next;
+
   Default.addExpense(body)
     .then(response => {
       console.log('Expense added successfully');
@@ -16,6 +19,9 @@ module.exports.addExpense = function addExpense(req, res, next, body) {
 };
 
 module.exports.createUser = function createUser (req, res, next, body) {
+  void req;
+  void next;
+
   Default.createUser(body)
     .then(function (response) {
       console.log('Account created successfully');
@@ -28,6 +34,9 @@ module.exports.createUser = function createUser (req, res, next, body) {
 };
 
 module.exports.editCitizen = function editCitizen (req, res, next, body, username) {
+  void req;
+  void next;
+
   Default.editCitizen(body, username)
     .then(response => {
       utils.writeJson(res, response);
@@ -39,6 +48,9 @@ module.exports.editCitizen = function editCitizen (req, res, next, body, usernam
 };
 
 module.exports.editCompany = function editCompany (req, res, next, body, username) {
+  void req;
+  void next;
+
   Default.editCompany(body, username)
     .then(response => {
       utils.writeJson(res, response);
@@ -50,6 +62,9 @@ module.exports.editCompany = function editCompany (req, res, next, body, usernam
 };
 
 module.exports.getCitizen = function getCitizen(req, res, next, username) {
+  void req;
+  void next;
+
   Default.getCitizen(username)
     .then(response => {
       utils.writeJson(res, response);
@@ -62,6 +77,9 @@ module.exports.getCitizen = function getCitizen(req, res, next, username) {
 };
 
 module.exports.getCitizens = function getCitizens (req, res, next, age, area) {
+  void req;
+  void next;
+
   Default.getCitizens(age, area)
     .then(response => {
       utils.writeJson(res, response);
@@ -73,6 +91,9 @@ module.exports.getCitizens = function getCitizens (req, res, next, age, area) {
 };
 
 module.exports.getCompany = function getCompany(req, res, next, username) {
+  void req;
+  void next;
+
   Default.getCompany(username)
     .then(response => {
       utils.writeJson(res, response);
@@ -85,6 +106,9 @@ module.exports.getCompany = function getCompany(req, res, next, username) {
 };
 
 module.exports.getExpense = function getExpense(req, res, next, userID, date, company) {
+  void req;
+  void next;
+
   Default.getExpense(userID, date, company)
     .then(response => {
       utils.writeJson(res, response);
@@ -97,6 +121,9 @@ module.exports.getExpense = function getExpense(req, res, next, userID, date, co
 
 
 module.exports.loginUser = function loginUser (req, res, next, body) {
+  void req;
+  void next;
+
   Default.loginUser(body)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -108,6 +135,9 @@ module.exports.loginUser = function loginUser (req, res, next, body) {
 };
 
 module.exports.retrievePassword = function retrievePassword (req, res, next, body) {
+  void req;
+  void next;
+
   Default.retrievePassword(body)
     .then(function (response) {
       utils.writeJson(res, response);
@@ -119,6 +149,9 @@ module.exports.retrievePassword = function retrievePassword (req, res, next, bod
 };
 
 module.exports.searchCompanies = function searchCompanies(req, res, next) {
+  void req;
+  void next;
+
   const username = req.query.username;
   console.log('Received query:', username); // Already added
   exports
