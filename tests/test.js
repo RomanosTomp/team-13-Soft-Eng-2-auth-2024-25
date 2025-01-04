@@ -1,3 +1,4 @@
+//Import required modules and utils
 const test = require('ava');
 const DefaultService = require('../service/DefaultService.js');
 const DefaultController = require('../controllers/Default.js');
@@ -6,7 +7,7 @@ const { stat } = require('fs');
 const utils = require('../utils/writer.js');
 const sinon = require('sinon');
 
-
+//Stub for siumulating response writing during testing
 test.beforeEach(t => {
 	t.context.writeJsonStub = (res, payload) => {
 		res.payload = payload;
@@ -18,10 +19,14 @@ const statisticskey = {
 	statisticsfile: "string"
 }
 
+//Basic test to confirm AVA is working
 test('foo', t => {
 	t.pass();
 });
 
+//Tests for the addEWxpense service
+
+//Test for successful addition of expense
 test('addExpense should resolve with the correct response', async t => {
 	const validBody = {
 		date: "2024-10-01",
@@ -33,7 +38,7 @@ test('addExpense should resolve with the correct response', async t => {
 	const response = await DefaultService.addExpense(validBody);
 	t.deepEqual(response, validBody);
 });
-
+//Test for failed addition of expense with invalid data
 test('addExpense should throw an error for invalid data', async t => {
 	const missingDataTypes = {
 		  date: "11-12-2024",
@@ -55,7 +60,7 @@ test('addExpense should throw an error for invalid data', async t => {
 	t.is(error2.message, 'Invalid expense data');
 });
 
-
+//Test for getExpense service
 test('getExpense should return a list with expenses', async t => {
 	const userID = 3;
 	const date = "2024-10-01";
@@ -69,6 +74,9 @@ test('getExpense should return a list with expenses', async t => {
 	}
 })
 
+//Test fot getCitizen service
+
+//Successful retrieval of citizen's profile
 test('getCitizen should return a valid user profile', async t => {
 	const username = "TestUser";
 
@@ -80,6 +88,7 @@ test('getCitizen should return a valid user profile', async t => {
 	}
 })
 
+//Error handling for invalid username in GetCitizen service
 test('getCitizen should throw an error for invalid username', async t => {
 	const username = "";
 
@@ -87,7 +96,7 @@ test('getCitizen should throw an error for invalid username', async t => {
 	const error = await t.throwsAsync(() => DefaultService.getCitizen(username));
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
-
+//Test for getCitizens service for successful retrieval of citizens
 test('getCitizens should return a valid user profile', async t => {
 	const age = 0;
 	const area = "areaOfResidence";
@@ -104,6 +113,7 @@ test('getCitizens should return a valid user profile', async t => {
 	}
 })
 
+//Test for getCitizens service for invalid username
 test('getCitizens should throw an error for invalid username', async t => {
 	const age = null;
 	const area = "";
@@ -113,6 +123,7 @@ test('getCitizens should throw an error for invalid username', async t => {
 	t.is(error.message, 'Invalid inputs');  // Ensure the error message matches
 });
 
+//Test for getCompany service for successful retrieval of company profile
 test('getCompany should return a valid company profile', async t => {
 	const username = "TestCompany";
 
@@ -125,6 +136,7 @@ test('getCompany should return a valid company profile', async t => {
 	}
 })
 
+//Test for getCompany service for invalid company name
 test('getCompany should throw an error for invalid company name', async t => {
 	const username = "";
 
@@ -133,6 +145,7 @@ test('getCompany should throw an error for invalid company name', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
 
+//Test fot editCitizen service for successful editing of citizen profile
 test('editCitizen should return a valid user profile', async t => {
 	const body = {
 		areaOfResidence: "areaOfResidence",
@@ -149,6 +162,7 @@ test('editCitizen should return a valid user profile', async t => {
 	}
 })
 
+//Test for editCitizen service for invalid username
 test('editCitizen should throw an error for invalid username', async t => {
 	const body = {
 		areaOfResidence: "areaOfResidence",
@@ -162,6 +176,7 @@ test('editCitizen should throw an error for invalid username', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
 
+//Test for editCitizen service for invalid body
 test('editCitizen should throw an error for invalid body', async t => {
 	const body = {};
 	const username = "TestUser";
@@ -171,6 +186,7 @@ test('editCitizen should throw an error for invalid body', async t => {
 	t.is(error.message, 'Invalid body');  // Ensure the error message matches
 });
 
+//Test for editCompany service for successful editing of company profile
 test('editCompany should return a valid company profile', async t => {
 	const body = {
 		price: 0.1,
@@ -190,6 +206,7 @@ test('editCompany should return a valid company profile', async t => {
 	}
 })
 
+//Test for editCompany service for invalid company name
 test('editCompany should throw an error for invalid company name', async t => {
 	const body = {
 		price: 0.1,
@@ -205,6 +222,7 @@ test('editCompany should throw an error for invalid company name', async t => {
 	t.is(error.message, 'Invalid username');  // Ensure the error message matches
 });
  
+//Test for editCompany service for invalid body
 test('editCompany should throw an error for invalid body', async t => {
 	const body = {};
 	const username = "TestCompany";
@@ -214,6 +232,7 @@ test('editCompany should throw an error for invalid body', async t => {
 	t.is(error.message, 'Invalid body');  // Ensure the error message matches
 });
 
+//Test for createUser service for successful creation of user
 test('createUser should resolve with the correct response when called with valid data', async t => {
 	const validBody = {
 		username: "john_doe",
@@ -228,7 +247,7 @@ test('createUser should resolve with the correct response when called with valid
 });
 
 
-
+//Test for createUser service for invalid data
 test('createUser should reject with an error when called with invalid data', async t => {
   	const missingDataTypes = {
     		username: "john_doe",
@@ -253,7 +272,7 @@ test('createUser should reject with an error when called with invalid data', asy
 
 
 
-
+//Test for loginUser service for successful login
 test('loginUser should resolve with correct message when called with valid data', async t => {
 	const validLogin = {
 		email: "john.doe@example.com",
@@ -264,7 +283,7 @@ test('loginUser should resolve with correct message when called with valid data'
 	t.is(response.message, 'Login successful');
 });
 
-
+//Test for loginUser service for invalid data
 test('loginUser should reject with error message when called with invalid data', async t => {
 	const missingValue = {
 		email: "john.doe@example.com"
@@ -282,7 +301,7 @@ test('loginUser should reject with error message when called with invalid data',
 	t.is(error2.message, 'Missing email or password');
 });
 
-
+//Test for retrievePassword service for successful retrieval of password
 test('retrievePassword should resolve with login info when called with valid email', async t => {
 	const validEmail = {
 		email: "john.doe@example.com"
@@ -293,7 +312,7 @@ test('retrievePassword should resolve with login info when called with valid ema
 	t.is(response.password, 'password123');
 });
 
-
+//Test for retrievePassword service for invalid email
 test('retrievePassword should reject with error message when called without valid email', async t => {
 	const missingEmail = {};
 	const emptyEmail = {
@@ -309,7 +328,7 @@ test('retrievePassword should reject with error message when called without vali
 
 
 ///JIM///
-
+//Test searchCompanies service should return a list of companies for a valid username
 test('searchCompanies should return a list of companies for a valid username', async t => {
 	const username = "validCompany";
 
@@ -326,7 +345,7 @@ test('searchCompanies should return a list of companies for a valid username', a
 	}
 });
 
-
+//Test searchCompanies service should return an empty array for a non-existing username
 test('searchCompanies should return an empty array for a non-existing username', async t => {
 	const username = "NonExistingCompany";
 
@@ -335,7 +354,7 @@ test('searchCompanies should return an empty array for a non-existing username',
 	t.is(result.length, 0, "Result should be an empty array for non-existing username");
 });
 
-
+//Test searchCompanies service should throw an error for an invalid username
 test('searchCompanies should throw an error for an invalid username', async (t) => {
 	const invalidUsernames = [null, '', undefined];
   
