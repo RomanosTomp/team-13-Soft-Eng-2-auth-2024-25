@@ -1,3 +1,5 @@
+//required consts for proper testings
+
 const test = require('ava');
 const DefaultService = require('../service/DefaultService.js');
 const DefaultServiceCitizens = require('../service/DefaultServiceCitizens.js');
@@ -22,12 +24,12 @@ test('POST /user/ - should return 200 for valid user data', async t=> {
     	   email: 'john.doe@example.com',
 	};
 
-	const response = await got.post('http://localhost:8080/user/', {
+	const response = await got.post('http://localhost:8080/user/', { //path
 	   json: payload,
 	   responseType: 'json',
 	});
 
-	t.is(response.statusCode, 200);
+	t.is(response.statusCode, 200); //response code
 	t.deepEqual(response.body, payload);
 });
 
@@ -36,13 +38,13 @@ test('POST /user/ - should return 400 for invalid user data', async t => {
   const invalidPayload = { username: 'john_doe' }; // Missing required keys
 
   const error = await t.throwsAsync(() =>
-    got.post(`http://localhost:8080/user/`, {
+    got.post(`http://localhost:8080/user/`, { //path
       json: invalidPayload,
       responseType: 'json',
     })
   );
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Invalid user data');
 });
 
@@ -56,12 +58,12 @@ test('PUT /user/login - should return 200 for valid credentials', async t => {
     password: 'password123',
   };
 
-  const response = await got.put(`http://localhost:8080/user/login`, {
+  const response = await got.put(`http://localhost:8080/user/login`, { //path
     json: payload,
     responseType: 'json',
   });
 
-  t.is(response.statusCode, 200);
+  t.is(response.statusCode, 200); //response code
   t.is(response.body.message, 'Login successful');
 });
 
@@ -69,13 +71,13 @@ test('PUT /user/login - should return 400 for missing credentials', async t => {
   const invalidPayload = { email: '' };
 
   const error = await t.throwsAsync(() =>
-    got.put(`http://localhost:8080/user/login`, {
+    got.put(`http://localhost:8080/user/login`, { //path
       json: invalidPayload,
       responseType: 'json',
     })
   );
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Missing email or password');
 });
 

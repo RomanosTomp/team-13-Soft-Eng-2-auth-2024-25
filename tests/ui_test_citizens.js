@@ -1,3 +1,5 @@
+//required consts for proper testings
+
 const test = require('ava');
 const DefaultServiceCitizens = require('../service/DefaultServiceCitizens.js');
 const DefaultController = require('../controllers/Default.js');
@@ -8,6 +10,7 @@ const got = require('got');
 // UI Tests for Expense Management
 ////////////////////////////////////////////
 
+//valid
 test('POST /expense - should return 200 for valid expense data', async t => {
   const payload = {
     userID: 123,
@@ -17,31 +20,32 @@ test('POST /expense - should return 200 for valid expense data', async t => {
     company: 'TravelCorp'
   };
 
-  const response = await got.post('http://localhost:8080/expense', {
+  const response = await got.post('http://localhost:8080/expense', { //path
     json: payload,
     responseType: 'json',
   });
 
-  t.is(response.statusCode, 200);
+  t.is(response.statusCode, 200); //response code
   t.deepEqual(response.body, payload);
 });
 
+//invalid 400
 test('POST /expense - should return 400 for missing expense data', async t => {
   const invalidPayload = { userID: 123 }; // Missing required keys
 
   const error = await t.throwsAsync(() =>
-    got.post('http://localhost:8080/expense', {
+    got.post('http://localhost:8080/expense', { //path
       json: invalidPayload,
       responseType: 'json',
     })
   );
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Invalid expense data');
 });
 
 
-
+//valid
 test('GET /expense - should return a list of expenses for a valid user', async t => {
   const params = {
     searchParams: {
@@ -52,13 +56,14 @@ test('GET /expense - should return a list of expenses for a valid user', async t
     responseType: 'json',
   };
 
-  const response = await got('http://localhost:8080/expense', params);
+  const response = await got('http://localhost:8080/expense', params); //path
 
-  t.is(response.statusCode, 200);
+  t.is(response.statusCode, 200); //response code
   t.true(Array.isArray(response.body), 'Response should be an array');
   t.true(response.body.length > 0, 'Response should not be empty');
 });
 
+//invalid
 test('GET /expense - should return 400 for missing query parameters', async t => {
   const params = {
     searchParams: {}, // No query parameters provided
@@ -66,10 +71,10 @@ test('GET /expense - should return 400 for missing query parameters', async t =>
   };
 
   const error = await t.throwsAsync(() =>
-    got('http://localhost:8080/expense', params)
+    got('http://localhost:8080/expense', params) //path
   );
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Invalid expense query parameters');
 });
 
@@ -78,7 +83,7 @@ test('GET /expense - should return 400 for missing query parameters', async t =>
 ///////////////////////////////////////////////
 
 // Tests for PUT citizen username
-
+//valid
 test('PUT /citizen/{username} - should return 200 for valid data', async t => {
   const username = 'john_doe';
   const payload = { 
@@ -87,55 +92,56 @@ test('PUT /citizen/{username} - should return 200 for valid data', async t => {
       age: 30 
   };
 
-  const response = await got.put(`http://localhost:8080/citizen/${username}`, { 
+  const response = await got.put(`http://localhost:8080/citizen/${username}`, {  //path
       json: payload, 
       responseType: 'json' 
   });
 
-  t.is(response.statusCode, 200);
+  t.is(response.statusCode, 200); //response code
   t.deepEqual(response.body, payload);
 });
 
-
+//invalid
 test('PUT /citizen/{username} - should return 400 for invalid data', async t => {
   const username = 'john_doe';
   const payload = { age: 30 }; // Missing required fields
 
-  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/citizen/${username}`, { 
+  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/citizen/${username}`, { //path
       json: payload, 
       responseType: 'json' 
   }));
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Invalid body');
 });
 
 //Tests for valid citizen username
 
+//valid
 test('GET /citizen/{username} - should return 200 for valid username', async t => {
   const username = 'john_doe';
 
-  const response = await got.get(`http://localhost:8080/citizen/${username}`, {
+  const response = await got.get(`http://localhost:8080/citizen/${username}`, { //path
     responseType: 'json'
   });
 
-  t.is(response.statusCode, 200);
+  t.is(response.statusCode, 200); //response code
   t.truthy(response.body.username);
 });
 
 
-//missing test for invalid get citizen/{username} me kwdiko 400
+//missing test for invalid get citizen/{username} with code 400
 test('GET /citizen/{username} - should return 400 for wrong data', async t => {
   let username = null;
   const payload = {
     // Example of a payload structure
     name: null
   };
-  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/citizen/${username}`, {
+  const error = await t.throwsAsync(() => got.put(`http://localhost:8080/citizen/${username}`, { //path
     json: payload,
     responseType: 'json'
   }));
 
-  t.is(error.response.statusCode, 400);
+  t.is(error.response.statusCode, 400); //response code
   t.is(error.response.body.message, 'Invalid body');
 });
