@@ -23,7 +23,7 @@ const statisticskey = {
 test('foo', t => {
 	t.pass();
 });
-
+//TESTS FOR DEFAULT SERVICES
 //Test for createUser service for successful creation of user
 test('createUser should resolve with the correct response when called with valid data', async t => {
 	const validBody = {

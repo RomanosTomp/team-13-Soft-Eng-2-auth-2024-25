@@ -10,7 +10,7 @@ const got = require('got');
 // UI Tests for Expense Management
 ////////////////////////////////////////////
 
-//valid
+//Test for valid expense data
 test('POST /expense - should return 200 for valid expense data', async t => {
   const payload = {
     userID: 123,
@@ -29,7 +29,7 @@ test('POST /expense - should return 200 for valid expense data', async t => {
   t.deepEqual(response.body, payload);
 });
 
-//invalid 400
+//Test for invalid missing expense data
 test('POST /expense - should return 400 for missing expense data', async t => {
   const invalidPayload = { userID: 123 }; // Missing required keys
 
@@ -45,7 +45,7 @@ test('POST /expense - should return 400 for missing expense data', async t => {
 });
 
 
-//valid
+//Test for valid expense query parameters and return a list of expenses
 test('GET /expense - should return a list of expenses for a valid user', async t => {
   const params = {
     searchParams: {
@@ -63,7 +63,7 @@ test('GET /expense - should return a list of expenses for a valid user', async t
   t.true(response.body.length > 0, 'Response should not be empty');
 });
 
-//invalid
+//test for invalid expense query parameters
 test('GET /expense - should return 400 for missing query parameters', async t => {
   const params = {
     searchParams: {}, // No query parameters provided
@@ -83,7 +83,7 @@ test('GET /expense - should return 400 for missing query parameters', async t =>
 ///////////////////////////////////////////////
 
 // Tests for PUT citizen username
-//valid
+//Tests for valid citizen username
 test('PUT /citizen/{username} - should return 200 for valid data', async t => {
   const username = 'john_doe';
   const payload = { 
@@ -101,7 +101,7 @@ test('PUT /citizen/{username} - should return 200 for valid data', async t => {
   t.deepEqual(response.body, payload);
 });
 
-//invalid
+//Tests for invalid citizen username
 test('PUT /citizen/{username} - should return 400 for invalid data', async t => {
   const username = 'john_doe';
   const payload = { age: 30 }; // Missing required fields
@@ -117,7 +117,7 @@ test('PUT /citizen/{username} - should return 400 for invalid data', async t => 
 
 //Tests for valid citizen username
 
-//valid
+//Tests for valid citizen username and return a list of citizens
 test('GET /citizen/{username} - should return 200 for valid username', async t => {
   const username = 'john_doe';
 

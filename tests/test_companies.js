@@ -18,7 +18,7 @@ const statisticskey = {
 }
 
 //actual testing begins here
-
+//TESTS FOR COMPANIES
 //Test for getCompany service for successful retrieval of company profile
 test('getCompany should return a valid company profile', async t => {
     const username = "TestCompany";

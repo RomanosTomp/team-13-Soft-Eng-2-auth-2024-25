@@ -19,6 +19,7 @@ const statisticskey = {
 }
 
 //testing begins here
+//TESTS FOR CITIZENS
 //Tests for the addExpense service
 
 //Test for successful addition of expense

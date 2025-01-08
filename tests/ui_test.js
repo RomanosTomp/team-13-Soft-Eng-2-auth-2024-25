@@ -15,6 +15,7 @@ const got = require('got');
 //UI Tests for User Registration & Login
 /////////////////////////////////////////
 
+//Test for valid user data
 test('POST /user/ - should return 200 for valid user data', async t=> {
 	const payload = {
 	   username: 'john_doe',
@@ -33,7 +34,7 @@ test('POST /user/ - should return 200 for valid user data', async t=> {
 	t.deepEqual(response.body, payload);
 });
 
-
+//Test for invalid user data
 test('POST /user/ - should return 400 for invalid user data', async t => {
   const invalidPayload = { username: 'john_doe' }; // Missing required keys
 
@@ -51,7 +52,7 @@ test('POST /user/ - should return 400 for invalid user data', async t => {
 
 
 
-
+//Test for valid login credentials
 test('PUT /user/login - should return 200 for valid credentials', async t => {
   const payload = {
     email: 'john.doe@example.com',
@@ -67,6 +68,7 @@ test('PUT /user/login - should return 200 for valid credentials', async t => {
   t.is(response.body.message, 'Login successful');
 });
 
+//Test for invalid login credentials
 test('PUT /user/login - should return 400 for missing credentials', async t => {
   const invalidPayload = { email: '' };
 
